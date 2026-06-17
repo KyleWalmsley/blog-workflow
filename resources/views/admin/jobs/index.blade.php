@@ -4,12 +4,11 @@
 @section('page-title', 'Jobs')
 
 @section('content')
-    <div class="page-header">
-        <div>
-            <h2 class="card-title">All Jobs</h2>
-            <p class="card-sub">Blog batches and review workflow</p>
+    <div class="page-heading">
+        <h1>Jobs</h1>
+        <div class="page-actions">
+            <a href="{{ route('admin.jobs.create') }}" class="btn btn-primary">New Job</a>
         </div>
-        <a href="{{ route('admin.jobs.create') }}" class="btn btn-brand">New Job</a>
     </div>
 
     <div class="card">

@@ -4,6 +4,14 @@
 @section('page-title', 'Dashboard')
 
 @section('content')
+    <div class="page-heading">
+        <h1>Dashboard</h1>
+        <div class="page-actions">
+            <a href="{{ route('admin.clients.create') }}" class="btn btn-secondary">Add Client</a>
+            <a href="{{ route('admin.jobs.create') }}" class="btn btn-primary">Add Job</a>
+        </div>
+    </div>
+
     <div class="grid g4">
         <div class="card">
             <div class="kpi-label">Active Clients</div>
@@ -29,7 +37,7 @@
                 <h2 class="card-title">Recent Jobs</h2>
                 <p class="card-sub">Latest workflow activity</p>
             </div>
-            <a href="{{ route('admin.jobs.create') }}" class="btn btn-brand">New Job</a>
+            <a href="{{ route('admin.jobs.create') }}" class="btn btn-primary">New Job</a>
         </div>
 
         @if($recentJobs->isEmpty())

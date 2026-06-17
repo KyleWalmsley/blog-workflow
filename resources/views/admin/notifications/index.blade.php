@@ -4,17 +4,16 @@
 @section('page-title', 'Notifications')
 
 @section('content')
-    <div class="page-header">
-        <div>
-            <h2 class="card-title">Notification Log</h2>
-            <p class="card-sub">Internal workflow alerts</p>
-        </div>
+    <div class="page-heading">
+        <h1>Notifications</h1>
         @if($unreadNotifications > 0)
-            <form method="POST" action="{{ route('admin.notifications.read-all') }}">
-                @csrf
-                @method('PATCH')
-                <button type="submit" class="btn btn-muted">Mark All Read</button>
-            </form>
+            <div class="page-actions">
+                <form method="POST" action="{{ route('admin.notifications.read-all') }}">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-secondary">Mark All Read</button>
+                </form>
+            </div>
         @endif
     </div>
 

@@ -4,12 +4,11 @@
 @section('page-title', 'Clients')
 
 @section('content')
-    <div class="page-header">
-        <div>
-            <h2 class="card-title">All Clients</h2>
-            <p class="card-sub">Manage client profiles and brand details</p>
+    <div class="page-heading">
+        <h1>Clients</h1>
+        <div class="page-actions">
+            <a href="{{ route('admin.clients.create') }}" class="btn btn-primary">Add Client</a>
         </div>
-        <a href="{{ route('admin.clients.create') }}" class="btn btn-brand">Add Client</a>
     </div>
 
     <div class="card">
