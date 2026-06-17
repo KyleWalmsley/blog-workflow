@@ -32,13 +32,8 @@
     </div>
 
     <div class="card">
-        <div class="page-header">
-            <div>
-                <h2 class="card-title">Recent Jobs</h2>
-                <p class="card-sub">Latest workflow activity</p>
-            </div>
-            <a href="{{ route('admin.jobs.create') }}" class="btn btn-primary">New Job</a>
-        </div>
+        <h2 class="card-title">Recent Jobs</h2>
+        <p class="card-sub" style="margin-bottom:12px;">Latest workflow activity</p>
 
         @if($recentJobs->isEmpty())
             <div class="empty-state">

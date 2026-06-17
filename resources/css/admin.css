@@ -71,17 +71,20 @@ html, body {
 
 /* ── Logo ───────────────────────────────────────────────────── */
 .logo-area {
-    padding: 0 12px 20px;
+    padding: 0 12px 20px 24px; /* left=24 centres the 32px icon at x=40 */
     flex-shrink: 0;
+    transition: padding-left 500ms ease-in-out;
 }
+.sidebar:hover .logo-area { padding-left: 12px; }
 .logo {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0;
     overflow: hidden;
     white-space: nowrap;
+    transition: gap 500ms ease-in-out;
 }
-.sidebar:hover .logo { justify-content: flex-start; }
+.sidebar:hover .logo { gap: 12px; }
 .logo-icon {
     width: 32px;
     height: 32px;
@@ -107,15 +110,13 @@ html, body {
     opacity: 0;
     transform: translateX(1rem);
     white-space: nowrap;
-    margin-left: 0;
-    transition: opacity 300ms ease-in-out 80ms, transform 350ms ease-in-out 80ms, margin-left 0ms 500ms;
+    transition: opacity 200ms ease-in-out, transform 250ms ease-in-out, max-width 0ms 500ms;
 }
 .sidebar:hover .logo-text {
     max-width: 200px;
     opacity: 1;
     transform: translateX(0);
-    margin-left: 12px;
-    transition: opacity 300ms ease-in-out 80ms, transform 350ms ease-in-out 80ms, margin-left 0ms;
+    transition: opacity 250ms ease-in-out 80ms, transform 300ms ease-in-out 80ms, max-width 0ms;
 }
 
 /* ── Nav ────────────────────────────────────────────────────── */
@@ -124,11 +125,12 @@ html, body {
 .nav-item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: 40px;
-    padding: 0 12px;
+    padding: 0 12px 0 22px; /* left=22 centres the 20px icon at x=40 */
+    gap: 0;
     border-radius: 8px;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, padding-left 500ms ease-in-out, gap 500ms ease-in-out;
     color: var(--text2);
     font-size: 13px;
     font-weight: 500;
@@ -136,7 +138,7 @@ html, body {
     overflow: hidden;
     white-space: nowrap;
 }
-.sidebar:hover .nav-item { justify-content: flex-start; }
+.sidebar:hover .nav-item { padding-left: 12px; gap: 12px; }
 .nav-item:hover { background: var(--bg3); color: var(--text); }
 .nav-item.active {
     background: var(--bg3);
@@ -159,15 +161,13 @@ html, body {
     opacity: 0;
     transform: translateX(1rem);
     white-space: nowrap;
-    margin-left: 0;
-    transition: opacity 250ms ease-in-out 80ms, transform 300ms ease-in-out 80ms, margin-left 0ms 500ms;
+    transition: opacity 200ms ease-in-out, transform 250ms ease-in-out, max-width 0ms 500ms;
 }
 .sidebar:hover .nav-label-text {
     max-width: 200px;
     opacity: 1;
     transform: translateX(0);
-    margin-left: 12px;
-    transition: opacity 250ms ease-in-out 80ms, transform 300ms ease-in-out 80ms, margin-left 0ms;
+    transition: opacity 250ms ease-in-out 80ms, transform 300ms ease-in-out 80ms, max-width 0ms;
 }
 
 .nav-badge {
@@ -287,7 +287,7 @@ html, body {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 .card:hover { border-color: var(--brandborder); box-shadow: 0 1px 8px rgba(37,99,235,0.06); }
-.card-title { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.card-title { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
 .card-sub { font-size: 11px; color: var(--text3); }
 
 /* ── Badges ─────────────────────────────────────────────────── */
