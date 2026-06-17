@@ -1,0 +1,18 @@
+{
+  "resources/css/admin.css": {
+    "file": "assets/admin-B_5Qu2sr.css",
+    "src": "resources/css/admin.css",
+    "isEntry": true
+  },
+  "resources/css/review.css": {
+    "file": "assets/review-ItO87nhq.css",
+    "src": "resources/css/review.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-ByVt8sWu.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
