@@ -2,7 +2,7 @@
 
 > **Purpose of this file:** Permanent project memory and onboarding document for Claude Code sessions. Read this before making any changes. Update this file whenever a significant development milestone is completed.
 >
-> Last updated: 2026-06-17 — Initial commit. Audit complete, full workflow smoke tested and confirmed working.
+> Last updated: 2026-06-17 — Admin panel redesigned to light theme with hover-expand sidebar.
 
 ---
 
@@ -40,7 +40,7 @@ There are no external user accounts. Access is controlled by a single shared acc
 | Framework | Laravel 11 |
 | PHP | 8.2+ |
 | Database | SQLite (file: `database/database.sqlite`) |
-| Frontend CSS | Tailwind CSS 3.x with custom component styles |
+| Frontend CSS | Tailwind CSS 3.x with custom component styles (light neutral + blue brand palette) |
 | Frontend JS | Alpine.js 3.x (review portal only) |
 | Build tool | Vite 5 with `laravel-vite-plugin` |
 | PDF generation | `barryvdh/laravel-dompdf` ^3.0 |
@@ -213,7 +213,9 @@ routes/
 - [x] Status badges and status enums throughout
 - [x] Form Request validation on all inputs
 - [x] Copy protection on review portal (CSS + JS)
-- [x] Responsive admin (dark) and review (light) layouts
+- [x] Responsive admin (light neutral theme) and review (light) layouts
+- [x] Admin sidebar: hover-expand (80px collapsed → 256px expanded) with SVG Heroicons
+- [x] Admin topbar: frosted glass (`rgba(255,255,255,0.85)` + `backdrop-filter: blur(12px)`)
 - [x] **Review link Copy button** on job show page (tokenised URL in a textbox + Copy button)
 - [x] **Admin "Complete" button** on job show page when job is InReview (alongside Prepare Re-Review)
 
@@ -301,15 +303,18 @@ npm install
 
 ## Current Project Status (2026-06-17)
 
-**Phase:** Initial commit baseline — smoke tested, ready for active feature development
+**Phase:** Active development — light theme redesign complete.
 
-The full MVP workflow was smoke tested end-to-end and is working correctly:
-- ✅ Access gate → Dashboard → Clients → Jobs → Job detail
-- ✅ Review portal: accordion, approve, progress bar, submit, finalize modal, completion screen
-- ✅ Admin reflects completed state, notification badge, Export ZIP download
-- ✅ Notifications log with mark-read
+Completed milestones:
+- ✅ Full MVP smoke tested end-to-end (access gate, dashboard, review portal, export)
+- ✅ Admin panel redesigned: light neutral palette (`#f5f5f5` bg, white cards, `#2563eb` brand blue)
+- ✅ Sidebar: hover-expand (80px → 256px, `width 500ms ease-in-out`), inline SVG Heroicons, overlay behaviour
+- ✅ Topbar: 64px, frosted glass white, Inter 500 title
 
-**Only real-world issue confirmed:** Blog content renders as plain unformatted text — the WYSIWYG editor is the single most critical missing piece before real usage.
+**Admin CSS variables (current):**
+`--bg: #f5f5f5` / `--bg1: #ffffff` / `--bg2: #ffffff` / `--bg3: #f5f5f5` / `--border: #e5e5e5`
+`--brand: #2563eb` / `--brandglow: #eff6ff` / `--brandborder: #dbeafe`
+`--text: #171717` / `--text2: #737373` / `--text3: #a3a3a3`
 
 **Immediate next steps (in priority order):**
 1. Wire up WYSIWYG editor for blog content (`resources/views/admin/blogs/_form.blade.php`)
