@@ -2,7 +2,7 @@
 
 > **Purpose of this file:** Permanent project memory and onboarding document for Claude Code sessions. Read this before making any changes. Update this file whenever a significant development milestone is completed.
 >
-> Last updated: 2026-06-17 — Admin panel redesigned to light theme with hover-expand sidebar.
+> Last updated: 2026-06-17 — UI polish session complete. Sidebar, topbar, headings, and dashboard CTAs all finalised.
 
 ---
 
@@ -214,8 +214,14 @@ routes/
 - [x] Form Request validation on all inputs
 - [x] Copy protection on review portal (CSS + JS)
 - [x] Responsive admin (light neutral theme) and review (light) layouts
-- [x] Admin sidebar: hover-expand (80px collapsed → 256px expanded) with SVG Heroicons
-- [x] Admin topbar: frosted glass (`rgba(255,255,255,0.85)` + `backdrop-filter: blur(12px)`)
+- [x] Admin sidebar: hover-expand (80px collapsed → 256px expanded) with SVG Heroicons; smooth symmetric open/close via padding-left + gap transitions
+- [x] Admin topbar: 80px, neutral-50/80 frosted glass, tab-pill nav (Dashboard / Notifications), bell icon with red dot for unread
+- [x] Sidebar: all icons pixel-perfect centred at x=40 in collapsed state (padding-left trick, no justify-content switching)
+- [x] Sidebar: logout button at bottom with separator line; neutral grey active state (not blue)
+- [x] Page headings: Inter 30px/500 h1 on all index pages (Dashboard, Jobs, Clients, Notifications)
+- [x] Dashboard quick actions: "Add Client" (secondary) + "Add Job" (primary) buttons in heading row
+- [x] Button variants: `.btn-primary` (dark solid) and `.btn-secondary` (white outlined) matching reference design
+- [x] Font consistency: `.card-title` uses Inter 600 throughout (no more DM Serif in body content)
 - [x] **Review link Copy button** on job show page (tokenised URL in a textbox + Copy button)
 - [x] **Admin "Complete" button** on job show page when job is InReview (alongside Prepare Re-Review)
 
@@ -303,22 +309,25 @@ npm install
 
 ## Current Project Status (2026-06-17)
 
-**Phase:** Active development — light theme redesign complete.
+**Phase:** Active development — admin UI polish session complete (2026-06-17).
 
 Completed milestones:
 - ✅ Full MVP smoke tested end-to-end (access gate, dashboard, review portal, export)
-- ✅ Admin panel redesigned: light neutral palette (`#f5f5f5` bg, white cards, `#2563eb` brand blue)
-- ✅ Sidebar: hover-expand (80px → 256px, `width 500ms ease-in-out`), inline SVG Heroicons, overlay behaviour
-- ✅ Topbar: 64px, frosted glass white, Inter 500 title
+- ✅ Admin panel redesigned: light neutral palette, white cards, blue brand
+- ✅ Sidebar polished to match reference design — smooth symmetric expand/collapse, logout, centred icons
+- ✅ Topbar: 80px, tab-pill navigation, bell icon with unread dot
+- ✅ Page headings (Inter 30px) + dashboard quick-action buttons
+- ✅ Consistent Inter font throughout admin content
 
 **Admin CSS variables (current):**
 `--bg: #f5f5f5` / `--bg1: #ffffff` / `--bg2: #ffffff` / `--bg3: #f5f5f5` / `--border: #e5e5e5`
 `--brand: #2563eb` / `--brandglow: #eff6ff` / `--brandborder: #dbeafe`
 `--text: #171717` / `--text2: #737373` / `--text3: #a3a3a3`
 
-**Immediate next steps (in priority order):**
-1. Wire up WYSIWYG editor for blog content (`resources/views/admin/blogs/_form.blade.php`)
-2. Fix duplicate root route (`routes/web.php`)
-3. Remove dead config key and hardcoded access code fallback
-4. Add database seeder for demo data
-5. Clean up ZIP accumulation in `JobExportService`
+**Next session priorities (in order):**
+1. **WYSIWYG editor for blog content** — `resources/views/admin/blogs/_form.blade.php` — critical before real usage; content field is longtext but currently plain textarea; review portal and PDF render it as HTML
+2. Fix duplicate root route — `routes/web.php` lines 14 & 16
+3. Remove dead `admin_access_code` key from `config/app.php`
+4. Remove hardcoded fallback access code from `config/blog-workflow.php`
+5. Add database seeder for demo data
+6. Clean up ZIP accumulation in `JobExportService`
