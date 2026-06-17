@@ -39,4 +39,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::patch('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
 
     Route::get('jobs/{job}/export', [ExportController::class, 'download'])->name('jobs.export');
+
+    Route::post('logout', [AccessController::class, 'destroy'])->name('logout');
 });

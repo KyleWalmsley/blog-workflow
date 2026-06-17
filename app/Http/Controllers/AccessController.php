@@ -25,4 +25,11 @@ class AccessController extends Controller
 
         return redirect()->route('admin.dashboard');
     }
+
+    public function destroy(\Illuminate\Http\Request $request): RedirectResponse
+    {
+        $request->session()->forget('admin_unlocked');
+
+        return redirect()->route('access.show');
+    }
 }
