@@ -347,8 +347,6 @@ Completed milestones:
 - `clients.email` — added for review invitation delivery
 
 **Next session priorities (in order):**
-1. Configure real SMTP credentials in Settings and smoke-test a live review invitation email end-to-end
-2. "Resend Review Email" button on job show page
-3. Email notification when client submits review (`ReviewSubmitted` → send outbound email to admin)
-4. Blog sort-order drag-and-drop (Sortable.js)
-5. Review portal mobile responsiveness (sidebar collapses on small screens)
+1. Blog sort-order drag-and-drop — replace the sort order number input on blog create/edit with a drag-to-reorder UI on the job show page (Sortable.js or similar CDN)
+2. New job type: **Website Content** — details to be discussed at the start of next session
+3. Visual adjustments for Client and Job index/show pages — fill empty space, improve layout density
