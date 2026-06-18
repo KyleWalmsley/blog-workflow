@@ -18,9 +18,15 @@
     <input type="file" id="logo" name="logo" class="form-input" accept="image/*">
 </div>
 
-<div class="form-group">
-    <label class="form-label" for="website">Website</label>
-    <input type="url" id="website" name="website" class="form-input" value="{{ old('website', $client?->website) }}" placeholder="https://">
+<div class="grid g2">
+    <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-input" value="{{ old('email', $client?->email) }}" placeholder="client@example.com">
+    </div>
+    <div class="form-group">
+        <label class="form-label" for="website">Website</label>
+        <input type="url" id="website" name="website" class="form-input" value="{{ old('website', $client?->website) }}" placeholder="https://">
+    </div>
 </div>
 
 <div class="form-group">

@@ -6,12 +6,11 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Review\ReviewController;
 use App\Http\Controllers\Review\ReviewSubmissionController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', fn () => redirect()->route('access.show'));
 
 Route::get('/', fn () => redirect()->route('access.show'));
 
@@ -39,6 +38,11 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::patch('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
 
     Route::get('jobs/{job}/export', [ExportController::class, 'download'])->name('jobs.export');
+
+    Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('settings/smtp', [SettingsController::class, 'updateSmtp'])->name('settings.smtp.update');
+    Route::post('settings/test-email', [SettingsController::class, 'testEmail'])->name('settings.test-email');
+    Route::post('settings/templates/{template}', [SettingsController::class, 'updateTemplate'])->name('settings.templates.update');
 
     Route::post('logout', [AccessController::class, 'destroy'])->name('logout');
 });

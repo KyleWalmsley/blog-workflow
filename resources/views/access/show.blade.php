@@ -1,7 +1,9 @@
 @extends('layouts.guest')
 
 @section('content')
-    <h1 class="access-title">Blog Workflow</h1>
+    <div class="access-logo">
+        <img src="/images/disence-full.png" alt="Disence">
+    </div>
     <p class="access-sub">Enter your access code to continue</p>
 
     <form method="POST" action="{{ route('access.store') }}">

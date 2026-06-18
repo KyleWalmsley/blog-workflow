@@ -20,5 +20,4 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-    'admin_access_code' => env('ADMIN_ACCESS_CODE', 'Hgbhad8v'),
 ];

@@ -52,7 +52,7 @@ class JobController extends Controller
 
     public function show(Job $job): View
     {
-        $job->load(['client', 'blogs']);
+        $job->load(['client', 'blogs', 'outgoingEmails']);
 
         $blogCounts = [
             'pending' => $job->blogs->where('status', BlogStatus::Pending)->count(),
@@ -99,12 +99,24 @@ class JobController extends Controller
     public function sendForReview(Job $job): RedirectResponse
     {
         try {
-            $this->jobWorkflowService->sendForReview($job);
+            $emailResult = $this->jobWorkflowService->sendForReview($job);
         } catch (DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
 
-        return back()->with('success', 'Job sent for client review.');
+        if ($emailResult === true) {
+            return back()->with('success', 'Job sent for review. Review invitation email sent to '.$job->client->email.'.');
+        }
+
+        if ($emailResult === null) {
+            return back()
+                ->with('success', 'Job sent for review.')
+                ->with('warning', 'No email address on file for this client — review email was not sent.');
+        }
+
+        return back()
+            ->with('success', 'Job sent for review.')
+            ->with('warning', $emailResult);
     }
 
     public function prepareReReview(Job $job): RedirectResponse

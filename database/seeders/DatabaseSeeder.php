@@ -5,8 +5,11 @@ namespace Database\Seeders;
 use App\Enums\BlogStatus;
 use App\Enums\ClientStatus;
 use App\Enums\JobStatus;
+use App\Enums\NotificationType;
+use App\Models\AdminNotification;
 use App\Models\Blog;
 use App\Models\Client;
+use App\Models\EmailTemplate;
 use App\Models\Job;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +17,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        EmailTemplate::firstOrCreate(
+            ['name' => 'review_invitation'],
+            [
+                'label' => 'Review Invitation',
+                'subject' => 'Your Blog Content Is Ready For Review',
+                'body' => '',
+            ]
+        );
+
         $client = Client::create([
             'name' => 'Lumina Coffee Roasters',
+            'email' => 'hello@luminacoffee.example.com',
             'website' => 'https://luminacoffee.example.com',
             'business_description' => 'Specialty coffee roaster serving the Pacific Northwest with ethically sourced beans and expert brewing guidance.',
             'primary_keywords' => 'specialty coffee, coffee roaster, single origin',
@@ -82,7 +95,13 @@ class DatabaseSeeder extends Seeder
             'meta_description' => 'Learn the difference between cold brew and iced coffee.',
             'focus_keyword' => 'cold brew',
             'focus_location' => 'Portland',
-            'status' => BlogStatus::Pending,
+            'status' => BlogStatus::Approved,
+        ]);
+
+        AdminNotification::create([
+            'type' => NotificationType::ReviewSubmitted,
+            'message' => 'Client "Lumina Coffee Roasters" submitted a review for "February 2026 Blog Batch".',
+            'job_id' => $reviewJob->id,
         ]);
     }
 }

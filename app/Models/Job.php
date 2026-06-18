@@ -59,6 +59,11 @@ class Job extends Model
         return $this->hasMany(AdminNotification::class);
     }
 
+    public function outgoingEmails(): HasMany
+    {
+        return $this->hasMany(OutgoingEmail::class)->latest();
+    }
+
     public function reviewUrl(): string
     {
         return route('review.show', $this->review_token);

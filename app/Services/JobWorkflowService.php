@@ -7,14 +7,19 @@ use App\Enums\JobStatus;
 use App\Enums\NotificationType;
 use App\Models\Job;
 use DomainException;
+use Throwable;
 
 class JobWorkflowService
 {
     public function __construct(
         private NotificationService $notificationService,
+        private EmailService $emailService,
     ) {}
 
-    public function sendForReview(Job $job): void
+    /**
+     * Returns null if no email address set, true on success, or the error message on failure.
+     */
+    public function sendForReview(Job $job): null|true|string
     {
         if ($job->status !== JobStatus::Draft) {
             throw new DomainException('Only draft jobs can be sent for review.');
@@ -25,6 +30,24 @@ class JobWorkflowService
         }
 
         $job->update(['status' => JobStatus::InReview]);
+
+        $job->load('client');
+
+        if (! $job->client->email) {
+            return null;
+        }
+
+        if (! $this->emailService->isConfigured()) {
+            return 'SMTP is not configured — review email was not sent. Configure it in Settings.';
+        }
+
+        try {
+            $this->emailService->sendReviewInvitation($job);
+
+            return true;
+        } catch (Throwable $e) {
+            return 'Review email failed to send: '.$e->getMessage();
+        }
     }
 
     public function prepareReReview(Job $job): void

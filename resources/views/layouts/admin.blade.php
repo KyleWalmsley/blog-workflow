@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     @vite(['resources/css/admin.css'])
+    @stack('head')
 </head>
 <body>
     <div class="shell">
@@ -20,5 +21,6 @@
             </main>
         </div>
     </div>
+    @stack('scripts')
 </body>
 </html>

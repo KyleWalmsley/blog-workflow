@@ -3,6 +3,15 @@
 @section('title', 'Edit Article')
 @section('page-title', 'Edit Article')
 
+@push('head')
+    <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+@endpush
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+    @include('admin.blogs._quill-init', ['initialContent' => old('content', $blog->content ?? '')])
+@endpush
+
 @section('content')
     <div class="card" style="max-width: 800px;">
         <h2 class="card-title">Edit: {{ $blog->title }}</h2>

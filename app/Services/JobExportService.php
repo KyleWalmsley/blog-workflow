@@ -43,6 +43,10 @@ class JobExportService
         $slug = Str::slug($job->title);
         $zipPath = $exportsDir.'/'.$job->id.'-'.$slug.'.zip';
 
+        if (file_exists($zipPath)) {
+            unlink($zipPath);
+        }
+
         $zip = new ZipArchive;
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new DomainException('Unable to create export archive.');

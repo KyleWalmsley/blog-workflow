@@ -33,6 +33,7 @@
 </div>
 
 <div class="form-group">
-    <label class="form-label" for="content">Content (HTML) *</label>
-    <textarea id="content" name="content" class="form-textarea" rows="16" required style="font-family: 'DM Mono', monospace; font-size: 12px;">{{ old('content', $blog?->content) }}</textarea>
+    <label class="form-label">Content *</label>
+    <div id="quill-editor" style="min-height: 380px; background: var(--bg1); border: 1px solid var(--border); border-radius: 8px; font-size: 14px;"></div>
+    <textarea id="content" name="content" style="display:none;">{{ old('content', $blog?->content) }}</textarea>
 </div>

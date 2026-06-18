@@ -17,6 +17,7 @@ class StoreClientRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
             'logo' => ['nullable', 'image', 'max:2048'],
             'website' => ['nullable', 'url', 'max:255'],
             'business_description' => ['nullable', 'string'],

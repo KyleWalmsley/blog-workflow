@@ -15,7 +15,7 @@ class AccessController extends Controller
 
     public function store(AccessCodeRequest $request): RedirectResponse
     {
-        $code = config('app.admin_access_code');
+        $code = config('blog-workflow.access_code');
 
         if ($request->validated('access_code') !== $code) {
             return back()->withErrors(['access_code' => 'Invalid access code.'])->withInput();

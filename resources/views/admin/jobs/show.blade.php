@@ -109,4 +109,34 @@
             </div>
         @endif
     </div>
+
+    @if($job->outgoingEmails->isNotEmpty())
+        <div class="card">
+            <h3 class="card-title">Activity</h3>
+            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px;">
+                @foreach($job->outgoingEmails as $email)
+                    <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; padding: 10px 14px; background: var(--bg3); border-radius: 8px; border: 1px solid var(--border);">
+                        <span style="flex-shrink: 0;">
+                            @if($email->status->value === 'sent')
+                                <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+                            @else
+                                <span style="width: 8px; height: 8px; background: var(--rose); border-radius: 50%; display: inline-block;"></span>
+                            @endif
+                        </span>
+                        <span style="color: var(--text);">
+                            {{ $email->type->label() }} email
+                            @if($email->status->value === 'sent')
+                                sent to <strong>{{ $email->recipient_email }}</strong>
+                            @else
+                                failed for <strong>{{ $email->recipient_email }}</strong>
+                            @endif
+                        </span>
+                        <span style="margin-left: auto; white-space: nowrap; color: var(--text2); font-size: 12px;">
+                            {{ ($email->sent_at ?? $email->created_at)->format('H:i \o\n d M Y') }}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 @endsection

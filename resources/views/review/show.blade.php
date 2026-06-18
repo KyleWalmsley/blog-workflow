@@ -36,6 +36,13 @@
         </div>
     </header>
 
+    <nav class="review-sidebar">
+        <p class="review-sidebar-heading">Contents</p>
+        @foreach($job->blogs->sortBy('sort_order')->values() as $i => $sidebarBlog)
+            <a href="#blog-{{ $i }}" class="review-sidebar-link">Article {{ $i + 1 }} — {{ $sidebarBlog->title }}</a>
+        @endforeach
+    </nav>
+
     <main class="review-main">
         @if(session('success'))
             <div class="flash flash-success">{{ session('success') }}</div>
@@ -62,13 +69,23 @@
 
                 <div class="blog-accordion">
                     <template x-for="(blog, index) in blogs" :key="blog.id">
-                        <div class="blog-card">
+                        <div class="blog-card" :id="'blog-' + index">
                             <div class="blog-card-header" @click="toggleBlog(index)">
                                 <div>
                                     <div class="blog-card-title" x-text="blog.title"></div>
                                     <div class="blog-card-meta">
-                                        <span class="chip" x-show="blog.focus_keyword" x-text="blog.focus_keyword"></span>
-                                        <span class="chip" x-show="blog.focus_location" x-text="blog.focus_location"></span>
+                                        <template x-if="blog.focus_keyword">
+                                            <div class="meta-chip-row">
+                                                <span class="meta-chip-label">Keywords</span>
+                                                <span class="chip" x-text="blog.focus_keyword"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="blog.focus_location">
+                                            <div class="meta-chip-row">
+                                                <span class="meta-chip-label">Location</span>
+                                                <span class="chip" x-text="blog.focus_location"></span>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
                                 <span
@@ -94,6 +111,15 @@
                                 </div>
                                 <div class="blog-content" x-html="blog.content"></div>
                                 @if($job->status === \App\Enums\JobStatus::InReview)
+                                <div class="notes-area">
+                                    <label>Feedback (required if declining)</label>
+                                    <textarea
+                                        x-model="blog.client_notes"
+                                        placeholder="Tell us what needs to change..."
+                                        @blur="saveNotes(blog)"
+                                        @input="blog.declineError = false"
+                                    ></textarea>
+                                </div>
                                 <div class="review-actions">
                                     <button
                                         type="button"
@@ -107,14 +133,7 @@
                                         :class="{ 'selected': blog.status === 'declined' }"
                                         @click="setStatus(blog, 'declined')"
                                     >Decline</button>
-                                </div>
-                                <div class="notes-area" x-show="blog.status === 'declined'">
-                                    <label style="font-size: 12px; color: var(--text2);">Feedback notes</label>
-                                    <textarea
-                                        x-model="blog.client_notes"
-                                        placeholder="Tell us what needs to change..."
-                                        @blur="saveNotes(blog)"
-                                    ></textarea>
+                                    <span class="decline-error" x-show="blog.declineError" x-cloak>Please tell us the reason so we can improve this article</span>
                                 </div>
                                 @endif
                             </div>

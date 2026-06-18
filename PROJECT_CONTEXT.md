@@ -2,7 +2,7 @@
 
 > **Purpose of this file:** Permanent project memory and onboarding document for Claude Code sessions. Read this before making any changes. Update this file whenever a significant development milestone is completed.
 >
-> Last updated: 2026-06-17 — UI polish session complete. Sidebar, topbar, headings, and dashboard CTAs all finalised.
+> Last updated: 2026-06-18 — Review portal UX polish + Quill editor fixes.
 
 ---
 
@@ -193,7 +193,7 @@ routes/
 
 ---
 
-## Implemented Features (as of 2026-06-17)
+## Implemented Features (as of 2026-06-18)
 
 - [x] Admin access code gate (session-based)
 - [x] Dashboard with KPI cards and recent jobs
@@ -224,40 +224,47 @@ routes/
 - [x] Font consistency: `.card-title` uses Inter 600 throughout (no more DM Serif in body content)
 - [x] **Review link Copy button** on job show page (tokenised URL in a textbox + Copy button)
 - [x] **Admin "Complete" button** on job show page when job is InReview (alongside Prepare Re-Review)
+- [x] **Client email field** — added to clients table, form, model, and validation
+- [x] **Automated review delivery email** — triggered on "Send For Review"; uses runtime SMTP config from DB; logs to `outgoing_emails`
+- [x] **Settings UI** — tab-based (`/admin/settings`); SMTP Settings tab + Email Templates tab; gear icon in sidebar above logout; active tab indicator overlaps divider line (classic tabs-on-a-rule pattern)
+- [x] **Disence branding** — login screen uses `disence-full.png` (full horizontal logo, full card width, gradient background); sidebar uses `disence-icon.png` (44px collapsed, centred at x=40) cross-fading to `disence-sidebar.png` (icon-only wordmark, 32px height) on expand; all three files at `public/images/`
+- [x] **SMTP settings stored in DB** — `settings` key-value table; `Setting::get/set()` helpers; configured at runtime via `Config::set()` (desktop app — no .env editing required)
+- [x] **Email Templates** — `email_templates` table; "Review Invitation" template editable via UI; subject + body fields
+- [x] **Outgoing email log** — `outgoing_emails` table with type, status, recipient, error capture; shown on Notifications → Outgoing tab
+- [x] **Notifications split** — Incoming tab (admin_notifications) + Outgoing tab (outgoing_emails)
+- [x] **Job Activity panel** — outgoing emails for a job shown chronologically on the job show page
+- [x] **Warning flash** — amber flash type added; shown when email skipped (no client email or SMTP unconfigured)
+- [x] **WYSIWYG editor** — Quill.js 2.x via CDN on blog create/edit pages; toolbar: headings, bold, italic, lists, link; pre-populated on edit; paragraph spacing shown in editor (`p { margin-bottom: 0.75em }`); `clipboard: { matchVisual: false }` preserves paragraph breaks on paste; form selection fixed via `hidden.closest('form')` (avoids attaching to sidebar logout form)
+- [x] **Database seeder** — `DatabaseSeeder` seeds demo client (Lumina Coffee Roasters), two jobs, four blogs, one notification, and the Review Invitation email template
+- [x] ZIP cleanup on re-export — old ZIP deleted before creating new one in `JobExportService`
+- [x] Duplicate root route removed from `routes/web.php`
+- [x] Dead `admin_access_code` key removed from `config/app.php`; `AccessController` corrected to read from `config('blog-workflow.access_code')`
+- [x] Hardcoded fallback access code removed from `config/blog-workflow.php`
+- [x] **Review portal — header alignment** — logo/title/client/revision row left-aligned to match main content column (220px left margin), no longer floating centred across full page width
+- [x] **Review portal — one article at a time** — `toggleBlog()` closes all other articles before opening the clicked one
+- [x] **Review portal — keyword/location labels** — "KEYWORDS" and "LOCATION" all-caps labels added inline before each chip in the collapsed card header so clients understand the context; `min-width: 68px; flex-shrink: 0` prevents labels from clipping into chips
 
 ---
 
-## Known Bugs (as of 2026-06-17)
+## Known Bugs (as of 2026-06-18)
 
 | # | Severity | Location | Description |
 |---|----------|----------|-------------|
-| 1 | Low | `routes/web.php:14,16` | Root `GET /` redirect defined twice — second silently overrides first |
-| 2 | Medium | `config/app.php` | Custom key `admin_access_code` is dead code — `AccessController` uses `config('blog-workflow.access_code')` instead |
-| 3 | Medium | `JobExportService.php` | `@unlink` and `@rmdir` suppress errors silently; ZIP failures give no user feedback |
-| 4 | Low | `ReviewSubmissionService::submitReview()` | Revision limit reached notification fires but does not block a subsequent `/submit` call; only individual blog decline is guarded |
-| 5 | Low | `Job::booted()` | No retry logic if `review_token` has a collision (negligible risk at this scale) |
-| 6 | Low | `NotificationController::markAllRead()` | Bulk `update(['read_at' => now()])` overwrites already-set timestamps; should scope to `whereNull('read_at')` |
-| 7 | Low | `Blog::booted()` | `max(sort_order)` on create has a theoretical race condition under concurrent creates |
+| 1 | Medium | `JobExportService.php` | `@unlink` and `@rmdir` suppress errors silently; ZIP failures give no user feedback |
+| 2 | Low | `ReviewSubmissionService::submitReview()` | Revision limit reached notification fires but does not block a subsequent `/submit` call; only individual blog decline is guarded |
+| 3 | Low | `Job::booted()` | No retry logic if `review_token` has a collision (negligible risk at this scale) |
+| 4 | Low | `Blog::booted()` | `max(sort_order)` on create has a theoretical race condition under concurrent creates |
 
 ---
 
 ## Missing Features
 
-### Critical
-- **Rich-text (WYSIWYG) editor for blog content** — `content` field is a plain `<textarea>` but the review portal and PDF both render it as HTML. Confirmed during smoke test: content renders as one long unformatted text block. Candidate: Quill or TipTap via CDN.
-
-### Important
-- **Database seeder** — no demo/test data; fresh installs require fully manual setup
-- **ZIP cleanup on re-export** — `storage/app/exports/` accumulates old ZIPs; should delete prior ZIP for the same job before creating a new one
-- **Remove hardcoded access code fallback** from `config/blog-workflow.php` — security hygiene
-
 ### Nice to Have
-- Email notification for `ReviewSubmitted`
+- "Resend Review Email" button on job show page (retry failed or re-send email)
+- Email notification for `ReviewSubmitted` (currently incoming notification only — no outbound email)
 - Blog sort-order drag-and-drop reordering (Sortable.js)
 - Soft deletes on clients and jobs
 - Pagination on jobs list within client show view
-
-> **Audit corrections (found during smoke test 2026-06-17):** "Copy Review Link" button and admin "Complete" button were flagged as missing in the original audit but are both already implemented and working.
 
 ---
 
@@ -297,7 +304,7 @@ npm install
 # with public/router.php as the router script (required for static asset serving)
 ```
 
-**Admin access code:** Set `ADMIN_ACCESS_CODE` in `.env`. The current fallback in `config/blog-workflow.php` is `Hgbhad8v` (this should be removed — see Known Bugs #2).
+**Admin access code:** Set `ADMIN_ACCESS_CODE` in `.env`. No fallback — the app will reject all logins if this env var is missing.
 
 **Important — server setup notes (resolved 2026-06-17):**
 - `php artisan serve` fails on this machine with "Failed to listen" — use the PHP built-in server directly instead
@@ -307,27 +314,41 @@ npm install
 
 ---
 
-## Current Project Status (2026-06-17)
+## Current Project Status (2026-06-18)
 
-**Phase:** Active development — admin UI polish session complete (2026-06-17).
+**Phase:** Active development — review portal UX polish + Quill editor fixes (2026-06-18).
 
 Completed milestones:
 - ✅ Full MVP smoke tested end-to-end (access gate, dashboard, review portal, export)
 - ✅ Admin panel redesigned: light neutral palette, white cards, blue brand
-- ✅ Sidebar polished to match reference design — smooth symmetric expand/collapse, logout, centred icons
+- ✅ Sidebar polished to match reference design — smooth symmetric expand/collapse, logout, centred icons; Settings above logout
 - ✅ Topbar: 80px, tab-pill navigation, bell icon with unread dot
 - ✅ Page headings (Inter 30px) + dashboard quick-action buttons
 - ✅ Consistent Inter font throughout admin content
+- ✅ Automated review delivery emails with DB-stored SMTP config
+- ✅ Settings UI with SMTP + Email Templates tabs
+- ✅ Outgoing email log + Notifications split into Incoming/Outgoing
+- ✅ Job Activity panel (outgoing emails per job)
+- ✅ Quill.js WYSIWYG editor on blog create/edit (form selection bug fixed; paragraph spacing; paste line breaks)
+- ✅ Database seeder with demo data
+- ✅ Review portal: header left-aligned, one-article-at-a-time accordion, keyword/location labels on card headers
+- ✅ All previous quick-fixes applied
 
 **Admin CSS variables (current):**
 `--bg: #f5f5f5` / `--bg1: #ffffff` / `--bg2: #ffffff` / `--bg3: #f5f5f5` / `--border: #e5e5e5`
 `--brand: #2563eb` / `--brandglow: #eff6ff` / `--brandborder: #dbeafe`
 `--text: #171717` / `--text2: #737373` / `--text3: #a3a3a3`
+`--amber: #f59e0b` / `--ambglow: #fffbeb` / `--ambborder: #fde68a` (warning flash)
+
+**Key new tables (2026-06-18):**
+- `settings` — key-value store; read via `Setting::get('key')`, write via `Setting::set('key', 'value')`
+- `outgoing_emails` — log of all sent/failed emails; type enum: `review_invitation | reminder | completion`
+- `email_templates` — editable email templates; name slug used as lookup key (e.g. `review_invitation`)
+- `clients.email` — added for review invitation delivery
 
 **Next session priorities (in order):**
-1. **WYSIWYG editor for blog content** — `resources/views/admin/blogs/_form.blade.php` — critical before real usage; content field is longtext but currently plain textarea; review portal and PDF render it as HTML
-2. Fix duplicate root route — `routes/web.php` lines 14 & 16
-3. Remove dead `admin_access_code` key from `config/app.php`
-4. Remove hardcoded fallback access code from `config/blog-workflow.php`
-5. Add database seeder for demo data
-6. Clean up ZIP accumulation in `JobExportService`
+1. Configure real SMTP credentials in Settings and smoke-test a live review invitation email end-to-end
+2. "Resend Review Email" button on job show page
+3. Email notification when client submits review (`ReviewSubmitted` → send outbound email to admin)
+4. Blog sort-order drag-and-drop (Sortable.js)
+5. Review portal mobile responsiveness (sidebar collapses on small screens)

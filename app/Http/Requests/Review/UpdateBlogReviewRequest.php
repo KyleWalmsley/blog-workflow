@@ -17,7 +17,7 @@ class UpdateBlogReviewRequest extends FormRequest
     {
         return [
             'status' => ['required', Rule::enum(BlogStatus::class)],
-            'client_notes' => ['nullable', 'string', 'max:2000', 'required_if:status,'.BlogStatus::Declined->value],
+            'client_notes' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }

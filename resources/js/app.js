@@ -3,7 +3,7 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 Alpine.data('reviewPortal', (config) => ({
-    blogs: config.blogs,
+    blogs: config.blogs.map(b => ({ ...b, declineError: false })),
     token: config.token,
     csrf: config.csrf,
     reviewedCount: config.reviewedCount,
@@ -25,10 +25,17 @@ Alpine.data('reviewPortal', (config) => ({
     },
 
     toggleBlog(index) {
-        this.blogs[index].open = !this.blogs[index].open;
+        const isOpen = this.blogs[index].open;
+        this.blogs.forEach(b => b.open = false);
+        this.blogs[index].open = !isOpen;
     },
 
     async setStatus(blog, status) {
+        if (status === 'declined' && !blog.client_notes?.trim()) {
+            blog.declineError = true;
+            return;
+        }
+        blog.declineError = false;
         blog.status = status;
         if (status !== 'declined') {
             blog.client_notes = '';
@@ -51,7 +58,7 @@ Alpine.data('reviewPortal', (config) => ({
             const data = await response.json();
 
             if (!response.ok) {
-                alert(data.message || 'Unable to save review.');
+                console.warn('Review save failed:', data.message);
                 return;
             }
 
@@ -59,12 +66,13 @@ Alpine.data('reviewPortal', (config) => ({
             blog.status = data.blog.status;
             blog.client_notes = data.blog.client_notes;
         } catch (e) {
-            alert('Network error. Please try again.');
+            console.warn('Network error saving review.');
         }
     },
 
     async saveNotes(blog) {
         if (blog.status === 'declined') {
+            blog.declineError = false;
             await this.setStatus(blog, 'declined');
         }
     },
