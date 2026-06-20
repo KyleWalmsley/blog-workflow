@@ -2,7 +2,7 @@
 
 > **Purpose of this file:** Permanent project memory and onboarding document for Claude Code sessions. Read this before making any changes. Update this file whenever a significant development milestone is completed.
 >
-> Last updated: 2026-06-18 — Review portal UX polish + Quill editor fixes.
+> Last updated: 2026-06-20 — Admin panel content area visual redesign complete.
 
 ---
 
@@ -314,9 +314,9 @@ npm install
 
 ---
 
-## Current Project Status (2026-06-18)
+## Current Project Status (2026-06-20)
 
-**Phase:** Active development — review portal UX polish + Quill editor fixes (2026-06-18).
+**Phase:** Active development — admin panel content area visual redesign complete (2026-06-20).
 
 Completed milestones:
 - ✅ Full MVP smoke tested end-to-end (access gate, dashboard, review portal, export)
@@ -332,7 +332,22 @@ Completed milestones:
 - ✅ Quill.js WYSIWYG editor on blog create/edit (form selection bug fixed; paragraph spacing; paste line breaks)
 - ✅ Database seeder with demo data
 - ✅ Review portal: header left-aligned, one-article-at-a-time accordion, keyword/location labels on card headers
-- ✅ All previous quick-fixes applied
+- ✅ **Content area visual redesign** — all admin pages ported to Tailwind utility classes; custom semantic CSS classes removed
+  - White cards: `bg-white border border-neutral-200 rounded-xl shadow-sm`
+  - Tailwind grid utilities replace `.g2/.g3/.g4`; table pattern with `divide-y` and `hover:bg-neutral-50`
+  - Status badge rewritten: micro-badge `text-[10px]` with colour-matched backgrounds
+  - Right sidebar: 272px fixed, blue gradient fade at top (`linear-gradient` directly on `.right-sidebar`)
+  - Topbar: `position: fixed; left: 80px; right: 0` — spans full width so bell sits at far right above right sidebar
+  - Content padding: `52px 112px` (top/sides) — doubled horizontal padding matching reference design proportions
+  - KPI cards: `p-7`, `text-3xl` numbers, relevant coloured SVG icons above each label
+  - Table rows and headers: `py-4` for taller, more spacious feel
+  - All card section headings: `text-xs font-semibold text-neutral-500 uppercase tracking-wide` — consistent with KPI labels
+
+**Admin CSS layout (current):**
+- `.page`: `padding: 52px 112px 48px; gap: 28px`
+- `.content`: `margin-left: 80px; margin-right: 272px; padding-top: 80px`
+- `.topbar`: `position: fixed; top: 0; left: 80px; right: 0; z-index: 45; padding: 0 32px 0 52px; height: 80px`
+- `.right-sidebar`: `width: 272px; position: fixed; top: 80px; right: 0; height: calc(100vh - 80px); background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 18%, #f8fbff 32%, #ffffff 52%)`
 
 **Admin CSS variables (current):**
 `--bg: #f5f5f5` / `--bg1: #ffffff` / `--bg2: #ffffff` / `--bg3: #f5f5f5` / `--border: #e5e5e5`
@@ -340,7 +355,7 @@ Completed milestones:
 `--text: #171717` / `--text2: #737373` / `--text3: #a3a3a3`
 `--amber: #f59e0b` / `--ambglow: #fffbeb` / `--ambborder: #fde68a` (warning flash)
 
-**Key new tables (2026-06-18):**
+**Key tables added previously (2026-06-18):**
 - `settings` — key-value store; read via `Setting::get('key')`, write via `Setting::set('key', 'value')`
 - `outgoing_emails` — log of all sent/failed emails; type enum: `review_invitation | reminder | completion`
 - `email_templates` — editable email templates; name slug used as lookup key (e.g. `review_invitation`)
@@ -349,4 +364,3 @@ Completed milestones:
 **Next session priorities (in order):**
 1. Blog sort-order drag-and-drop — replace the sort order number input on blog create/edit with a drag-to-reorder UI on the job show page (Sortable.js or similar CDN)
 2. New job type: **Website Content** — details to be discussed at the start of next session
-3. Visual adjustments for Client and Job index/show pages — fill empty space, improve layout density
