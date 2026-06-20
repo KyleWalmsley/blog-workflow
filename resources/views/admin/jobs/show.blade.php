@@ -39,7 +39,7 @@
 
     <div class="grid grid-cols-2 gap-5">
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
-            <h3 class="text-sm font-semibold text-neutral-900 mb-3">Client</h3>
+            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-3">Client</h3>
             <p class="text-sm text-neutral-600">
                 <a href="{{ route('admin.clients.show', $job->client) }}" class="text-blue-600 hover:underline">{{ $job->client->name }}</a>
             </p>
@@ -48,7 +48,7 @@
             @endif
         </div>
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
-            <h3 class="text-sm font-semibold text-neutral-900 mb-1">Review Link</h3>
+            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1">Review Link</h3>
             <p class="text-xs text-neutral-400 mb-3">Share with client for article review</p>
             <div style="display: flex; gap: 8px; align-items: center;">
                 <input type="text" readonly class="form-input" value="{{ $job->reviewUrl() }}" id="review-url" style="font-size: 11px; font-family: 'DM Mono', monospace;">
@@ -112,7 +112,7 @@
 
     @if($job->outgoingEmails->isNotEmpty())
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
-            <h3 class="text-sm font-semibold text-neutral-900 mb-4">Activity</h3>
+            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">Activity</h3>
             <div class="space-y-1">
                 @foreach($job->outgoingEmails as $email)
                     <div class="flex items-center gap-3 py-4 border-b border-neutral-100 last:border-0">

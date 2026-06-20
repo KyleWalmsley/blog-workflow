@@ -22,7 +22,7 @@
 
     <div class="grid grid-cols-2 gap-5">
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
-            <h3 class="text-sm font-semibold text-neutral-900 mb-4">Profile</h3>
+            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">Profile</h3>
             <dl class="text-sm space-y-3">
                 @if($client->website)
                     <dt class="text-xs text-neutral-400 mt-3">Website</dt>
@@ -39,7 +39,7 @@
             </dl>
         </div>
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
-            <h3 class="text-sm font-semibold text-neutral-900 mb-4">SEO Context</h3>
+            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-4">SEO Context</h3>
             <dl class="text-sm space-y-3">
                 @foreach(['primary_keywords' => 'Primary Keywords', 'secondary_keywords' => 'Secondary Keywords', 'target_locations' => 'Locations', 'target_audience' => 'Audience'] as $field => $label)
                     @if($client->$field)

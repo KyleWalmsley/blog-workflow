@@ -27,7 +27,7 @@
     @if($activeTab === 'smtp')
         <div class="flex flex-col gap-5">
             <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
-                <h2 class="text-sm font-semibold text-neutral-900 mb-0.5">SMTP Settings</h2>
+                <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-0.5">SMTP Settings</h2>
                 <p class="text-xs text-neutral-400 mb-5">Used to send review invitation emails to clients. Settings are stored in the database.</p>
 
                 <form method="POST" action="{{ route('admin.settings.smtp.update') }}">
@@ -103,7 +103,7 @@
             </div>
 
             <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
-                <h2 class="text-sm font-semibold text-neutral-900 mb-0.5">Send Test Email</h2>
+                <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-0.5">Send Test Email</h2>
                 <p class="text-xs text-neutral-400 mb-5">Verify your SMTP settings are working by sending a test email.</p>
 
                 <form method="POST" action="{{ route('admin.settings.test-email') }}">
@@ -127,7 +127,7 @@
         <div class="flex flex-col gap-5">
             @forelse($templates as $template)
                 <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
-                    <h2 class="text-sm font-semibold text-neutral-900 mb-0.5">{{ $template->label }}</h2>
+                    <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-0.5">{{ $template->label }}</h2>
                     <p class="text-xs text-neutral-400 mb-5">
                         Template name: <code style="background: var(--bg3); padding: 1px 6px; border-radius: 4px; font-size: 12px;">{{ $template->name }}</code>
                     </p>
