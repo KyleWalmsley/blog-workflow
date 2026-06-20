@@ -4,9 +4,9 @@
 @section('page-title', 'New Client')
 
 @section('content')
-    <div class="card" style="max-width: 720px;">
-        <h2 class="card-title">Create Client</h2>
-        <p class="card-sub" style="margin-bottom: 20px;">Add a new client profile</p>
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6" style="max-width: 720px;">
+        <h2 class="text-sm font-semibold text-neutral-900 mb-0.5">Create Client</h2>
+        <p class="text-xs text-neutral-400 mb-5">Add a new client profile</p>
 
         <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data">
             @csrf

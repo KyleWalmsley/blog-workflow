@@ -4,8 +4,8 @@
 @section('page-title', 'Edit Client')
 
 @section('content')
-    <div class="card" style="max-width: 720px;">
-        <h2 class="card-title">Edit {{ $client->name }}</h2>
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6" style="max-width: 720px;">
+        <h2 class="text-sm font-semibold text-neutral-900 mb-5">Edit {{ $client->name }}</h2>
 
         <form method="POST" action="{{ route('admin.clients.update', $client) }}" enctype="multipart/form-data">
             @csrf

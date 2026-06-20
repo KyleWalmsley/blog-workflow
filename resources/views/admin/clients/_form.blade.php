@@ -18,7 +18,7 @@
     <input type="file" id="logo" name="logo" class="form-input" accept="image/*">
 </div>
 
-<div class="grid g2">
+<div class="grid grid-cols-2 gap-4">
     <div class="form-group">
         <label class="form-label" for="email">Email Address</label>
         <input type="email" id="email" name="email" class="form-input" value="{{ old('email', $client?->email) }}" placeholder="client@example.com">
@@ -34,7 +34,7 @@
     <textarea id="business_description" name="business_description" class="form-textarea">{{ old('business_description', $client?->business_description) }}</textarea>
 </div>
 
-<div class="grid g2">
+<div class="grid grid-cols-2 gap-4">
     <div class="form-group">
         <label class="form-label" for="primary_keywords">Primary Keywords</label>
         <textarea id="primary_keywords" name="primary_keywords" class="form-textarea" rows="3">{{ old('primary_keywords', $client?->primary_keywords) }}</textarea>
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<div class="grid g2">
+<div class="grid grid-cols-2 gap-4">
     <div class="form-group">
         <label class="form-label" for="target_locations">Target Locations</label>
         <input type="text" id="target_locations" name="target_locations" class="form-input" value="{{ old('target_locations', $client?->target_locations) }}">

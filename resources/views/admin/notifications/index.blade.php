@@ -35,102 +35,102 @@
 
     {{-- Incoming tab --}}
     @if($activeTab === 'incoming')
-        <div class="card">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
             @if($notifications->isEmpty())
                 <div class="empty-state"><p>No notifications yet.</p></div>
             @else
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Message</th>
-                                <th>Job</th>
-                                <th>When</th>
-                                <th></th>
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-neutral-100 bg-neutral-50">
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Type</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Message</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Job</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">When</th>
+                            <th class="px-5 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-100">
+                        @foreach($notifications as $notification)
+                            <tr class="transition-colors {{ $notification->read_at ? 'hover:bg-neutral-50' : 'bg-blue-50 hover:bg-blue-50/80' }}">
+                                <td class="px-5 py-3">@include('admin.partials.status-badge', ['status' => $notification->type])</td>
+                                <td class="px-5 py-3 text-neutral-700">{{ $notification->message }}</td>
+                                <td class="px-5 py-3 text-neutral-600">
+                                    @if($notification->job)
+                                        <a href="{{ route('admin.jobs.show', $notification->job) }}" class="text-blue-600 hover:underline">{{ $notification->job->title }}</a>
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                                <td class="px-5 py-3 text-neutral-500">{{ $notification->created_at->diffForHumans() }}</td>
+                                <td class="px-5 py-3 text-right">
+                                    @if(!$notification->read_at)
+                                        <form method="POST" action="{{ route('admin.notifications.read', $notification) }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-sm btn-muted">Mark Read</button>
+                                        </form>
+                                    @else
+                                        <span class="text-xs text-neutral-400">Read</span>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($notifications as $notification)
-                                <tr style="{{ $notification->read_at ? '' : 'background: var(--brandglow);' }}">
-                                    <td>@include('admin.partials.status-badge', ['status' => $notification->type])</td>
-                                    <td>{{ $notification->message }}</td>
-                                    <td>
-                                        @if($notification->job)
-                                            <a href="{{ route('admin.jobs.show', $notification->job) }}">{{ $notification->job->title }}</a>
-                                        @else
-                                            —
-                                        @endif
-                                    </td>
-                                    <td>{{ $notification->created_at->diffForHumans() }}</td>
-                                    <td>
-                                        @if(!$notification->read_at)
-                                            <form method="POST" action="{{ route('admin.notifications.read', $notification) }}">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-muted">Mark Read</button>
-                                            </form>
-                                        @else
-                                            <span style="font-size: 11px; color: var(--text3);">Read</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="pagination">{{ $notifications->links() }}</div>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="pagination px-5 pb-4">{{ $notifications->links() }}</div>
             @endif
         </div>
     @endif
 
     {{-- Outgoing tab --}}
     @if($activeTab === 'outgoing')
-        <div class="card">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
             @if($outgoingEmails->isEmpty())
                 <div class="empty-state"><p>No outgoing emails logged yet.</p></div>
             @else
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Recipient</th>
-                                <th>Job</th>
-                                <th>Client</th>
-                                <th>Status</th>
-                                <th>Sent</th>
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-neutral-100 bg-neutral-50">
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Type</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Recipient</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Job</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Client</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Status</th>
+                            <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Sent</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-neutral-100">
+                        @foreach($outgoingEmails as $email)
+                            <tr class="hover:bg-neutral-50 transition-colors">
+                                <td class="px-5 py-3 text-neutral-700">{{ $email->type->label() }}</td>
+                                <td class="px-5 py-3 font-mono text-xs text-neutral-600">{{ $email->recipient_email }}</td>
+                                <td class="px-5 py-3 text-neutral-600">
+                                    @if($email->job)
+                                        <a href="{{ route('admin.jobs.show', $email->job) }}" class="text-blue-600 hover:underline">{{ $email->job->title }}</a>
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                                <td class="px-5 py-3 text-neutral-600">{{ $email->client?->name ?? '—' }}</td>
+                                <td class="px-5 py-3">
+                                    @if($email->status->value === 'sent')
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-green-50 text-green-700">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>{{ $email->status->label() }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-50 text-red-600" title="{{ $email->error_message }}">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>{{ $email->status->label() }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-5 py-3 text-xs text-neutral-400 whitespace-nowrap">
+                                    {{ $email->sent_at?->format('d M Y H:i') ?? $email->created_at->format('d M Y H:i') }}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($outgoingEmails as $email)
-                                <tr>
-                                    <td>{{ $email->type->label() }}</td>
-                                    <td style="font-family: monospace; font-size: 12px;">{{ $email->recipient_email }}</td>
-                                    <td>
-                                        @if($email->job)
-                                            <a href="{{ route('admin.jobs.show', $email->job) }}">{{ $email->job->title }}</a>
-                                        @else
-                                            —
-                                        @endif
-                                    </td>
-                                    <td>{{ $email->client?->name ?? '—' }}</td>
-                                    <td>
-                                        @if($email->status->value === 'sent')
-                                            <span class="badge badge-green"><span class="badge-dot"></span>{{ $email->status->label() }}</span>
-                                        @else
-                                            <span class="badge badge-rose" title="{{ $email->error_message }}"><span class="badge-dot"></span>{{ $email->status->label() }}</span>
-                                        @endif
-                                    </td>
-                                    <td style="white-space: nowrap; font-size: 12px; color: var(--text2);">
-                                        {{ $email->sent_at?->format('d M Y H:i') ?? $email->created_at->format('d M Y H:i') }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="pagination">{{ $outgoingEmails->links() }}</div>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="pagination px-5 pb-4">{{ $outgoingEmails->links() }}</div>
             @endif
         </div>
     @endif

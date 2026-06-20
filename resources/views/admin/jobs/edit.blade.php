@@ -4,8 +4,8 @@
 @section('page-title', 'Edit Job')
 
 @section('content')
-    <div class="card" style="max-width: 560px;">
-        <h2 class="card-title">Edit Job</h2>
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6" style="max-width: 560px;">
+        <h2 class="text-sm font-semibold text-neutral-900 mb-5">Edit Job</h2>
         <form method="POST" action="{{ route('admin.jobs.update', $job) }}">
             @csrf
             @method('PUT')

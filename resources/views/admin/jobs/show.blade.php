@@ -6,8 +6,8 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h2 class="card-title">{{ $job->title }}</h2>
-            <p class="card-sub">
+            <h2 class="text-base font-semibold text-neutral-900">{{ $job->title }}</h2>
+            <p class="text-xs text-neutral-500 mt-1 flex items-center gap-2">
                 {{ $job->client->name }} ·
                 @include('admin.partials.status-badge', ['status' => $job->status])
                 · Revision {{ $job->revision_count }} of {{ $job->maxRevisions() }}
@@ -37,34 +37,34 @@
         </div>
     </div>
 
-    <div class="grid g2">
-        <div class="card">
-            <h3 class="card-title">Client</h3>
-            <p style="margin-top: 8px; font-size: 13px; color: var(--text2);">
-                <a href="{{ route('admin.clients.show', $job->client) }}">{{ $job->client->name }}</a>
+    <div class="grid grid-cols-2 gap-5">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-neutral-900 mb-3">Client</h3>
+            <p class="text-sm text-neutral-600">
+                <a href="{{ route('admin.clients.show', $job->client) }}" class="text-blue-600 hover:underline">{{ $job->client->name }}</a>
             </p>
             @if($job->client->business_description)
-                <p style="margin-top: 8px; font-size: 12px; color: var(--text3);">{{ Str::limit($job->client->business_description, 200) }}</p>
+                <p class="mt-2 text-xs text-neutral-400">{{ Str::limit($job->client->business_description, 200) }}</p>
             @endif
         </div>
-        <div class="card">
-            <h3 class="card-title">Review Link</h3>
-            <p class="card-sub" style="margin-bottom: 12px;">Share with client for article review</p>
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-neutral-900 mb-1">Review Link</h3>
+            <p class="text-xs text-neutral-400 mb-3">Share with client for article review</p>
             <div style="display: flex; gap: 8px; align-items: center;">
                 <input type="text" readonly class="form-input" value="{{ $job->reviewUrl() }}" id="review-url" style="font-size: 11px; font-family: 'DM Mono', monospace;">
                 <button type="button" class="btn btn-sm btn-brand" onclick="navigator.clipboard.writeText(document.getElementById('review-url').value); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);">Copy</button>
             </div>
             @if($job->review_submitted_at)
-                <p style="margin-top: 10px; font-size: 12px; color: var(--text3);">Last submitted {{ $job->review_submitted_at->diffForHumans() }}</p>
+                <p class="mt-2 text-xs text-neutral-400">Last submitted {{ $job->review_submitted_at->diffForHumans() }}</p>
             @endif
         </div>
     </div>
 
-    <div class="card">
-        <div class="page-header">
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
             <div>
-                <h3 class="card-title">Blog Articles</h3>
-                <p class="card-sub">
+                <h3 class="text-sm font-semibold text-neutral-900">Blog Articles</h3>
+                <p class="text-xs text-neutral-400 mt-0.5">
                     {{ $blogCounts['pending'] }} pending ·
                     {{ $blogCounts['approved'] }} approved ·
                     {{ $blogCounts['declined'] }} declined
@@ -76,62 +76,56 @@
         @if($job->blogs->isEmpty())
             <div class="empty-state"><p>No articles yet. Add blog content before sending for review.</p></div>
         @else
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Focus</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($job->blogs as $blog)
-                            <tr>
-                                <td>{{ $blog->sort_order + 1 }}</td>
-                                <td>{{ $blog->title }}</td>
-                                <td>{{ $blog->focus_keyword ?? '—' }}{{ $blog->focus_location ? ' · ' . $blog->focus_location : '' }}</td>
-                                <td>@include('admin.partials.status-badge', ['status' => $blog->status])</td>
-                                <td style="display: flex; gap: 6px;">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-neutral-100 bg-neutral-50">
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">#</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Title</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Focus</th>
+                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Status</th>
+                        <th class="px-5 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-neutral-100">
+                    @foreach($job->blogs as $blog)
+                        <tr class="hover:bg-neutral-50 transition-colors">
+                            <td class="px-5 py-3 text-neutral-400 font-mono text-xs">{{ $blog->sort_order + 1 }}</td>
+                            <td class="px-5 py-3 font-medium text-neutral-800">{{ $blog->title }}</td>
+                            <td class="px-5 py-3 text-neutral-500 text-xs">{{ $blog->focus_keyword ?? '—' }}{{ $blog->focus_location ? ' · ' . $blog->focus_location : '' }}</td>
+                            <td class="px-5 py-3">@include('admin.partials.status-badge', ['status' => $blog->status])</td>
+                            <td class="px-5 py-3">
+                                <div style="display: flex; gap: 6px; justify-content: flex-end;">
                                     <a href="{{ route('admin.jobs.blogs.edit', [$job, $blog]) }}" class="btn btn-sm btn-muted">Edit</a>
                                     <form method="POST" action="{{ route('admin.jobs.blogs.destroy', [$job, $blog]) }}" onsubmit="return confirm('Delete this article?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                     </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         @endif
     </div>
 
     @if($job->outgoingEmails->isNotEmpty())
-        <div class="card">
-            <h3 class="card-title">Activity</h3>
-            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
+            <h3 class="text-sm font-semibold text-neutral-900 mb-4">Activity</h3>
+            <div class="space-y-1">
                 @foreach($job->outgoingEmails as $email)
-                    <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; padding: 10px 14px; background: var(--bg3); border-radius: 8px; border: 1px solid var(--border);">
-                        <span style="flex-shrink: 0;">
-                            @if($email->status->value === 'sent')
-                                <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
-                            @else
-                                <span style="width: 8px; height: 8px; background: var(--rose); border-radius: 50%; display: inline-block;"></span>
-                            @endif
-                        </span>
-                        <span style="color: var(--text);">
+                    <div class="flex items-center gap-3 py-3 border-b border-neutral-100 last:border-0">
+                        <span class="flex-shrink-0 w-2 h-2 rounded-full {{ $email->status->value === 'sent' ? 'bg-green-500' : 'bg-red-400' }}"></span>
+                        <span class="text-sm text-neutral-700">
                             {{ $email->type->label() }} email
                             @if($email->status->value === 'sent')
-                                sent to <strong>{{ $email->recipient_email }}</strong>
+                                sent to <strong class="font-medium">{{ $email->recipient_email }}</strong>
                             @else
-                                failed for <strong>{{ $email->recipient_email }}</strong>
+                                failed for <strong class="font-medium">{{ $email->recipient_email }}</strong>
                             @endif
                         </span>
-                        <span style="margin-left: auto; white-space: nowrap; color: var(--text2); font-size: 12px;">
+                        <span class="ml-auto text-xs text-neutral-400 whitespace-nowrap">
                             {{ ($email->sent_at ?? $email->created_at)->format('H:i \o\n d M Y') }}
                         </span>
                     </div>

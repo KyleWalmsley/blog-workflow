@@ -5,7 +5,7 @@
     <input type="text" id="title" name="title" class="form-input" value="{{ old('title', $blog?->title) }}" required>
 </div>
 
-<div class="grid g2">
+<div class="grid grid-cols-2 gap-4">
     <div class="form-group">
         <label class="form-label" for="meta_title">Meta Title</label>
         <input type="text" id="meta_title" name="meta_title" class="form-input" value="{{ old('meta_title', $blog?->meta_title) }}">
@@ -21,7 +21,7 @@
     <textarea id="meta_description" name="meta_description" class="form-textarea" rows="2">{{ old('meta_description', $blog?->meta_description) }}</textarea>
 </div>
 
-<div class="grid g2">
+<div class="grid grid-cols-2 gap-4">
     <div class="form-group">
         <label class="form-label" for="focus_keyword">Focus Keyword</label>
         <input type="text" id="focus_keyword" name="focus_keyword" class="form-input" value="{{ old('focus_keyword', $blog?->focus_keyword) }}">
