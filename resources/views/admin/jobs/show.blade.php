@@ -38,7 +38,7 @@
     </div>
 
     <div class="grid grid-cols-2 gap-5">
-        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
             <h3 class="text-sm font-semibold text-neutral-900 mb-3">Client</h3>
             <p class="text-sm text-neutral-600">
                 <a href="{{ route('admin.clients.show', $job->client) }}" class="text-blue-600 hover:underline">{{ $job->client->name }}</a>
@@ -47,7 +47,7 @@
                 <p class="mt-2 text-xs text-neutral-400">{{ Str::limit($job->client->business_description, 200) }}</p>
             @endif
         </div>
-        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
             <h3 class="text-sm font-semibold text-neutral-900 mb-1">Review Link</h3>
             <p class="text-xs text-neutral-400 mb-3">Share with client for article review</p>
             <div style="display: flex; gap: 8px; align-items: center;">
@@ -61,10 +61,10 @@
     </div>
 
     <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
-        <div class="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
+        <div class="px-6 py-6 border-b border-neutral-100 flex items-center justify-between">
             <div>
                 <h3 class="text-sm font-semibold text-neutral-900">Blog Articles</h3>
-                <p class="text-xs text-neutral-400 mt-0.5">
+                <p class="text-xs text-neutral-400 mt-1">
                     {{ $blogCounts['pending'] }} pending ·
                     {{ $blogCounts['approved'] }} approved ·
                     {{ $blogCounts['declined'] }} declined
@@ -79,21 +79,21 @@
             <table class="w-full text-sm">
                 <thead>
                     <tr class="border-b border-neutral-100 bg-neutral-50">
-                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">#</th>
-                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Title</th>
-                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Focus</th>
-                        <th class="text-left px-5 py-3 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Status</th>
-                        <th class="px-5 py-3"></th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">#</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Title</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Focus</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Status</th>
+                        <th class="px-6 py-4"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-neutral-100">
                     @foreach($job->blogs as $blog)
                         <tr class="hover:bg-neutral-50 transition-colors">
-                            <td class="px-5 py-3 text-neutral-400 font-mono text-xs">{{ $blog->sort_order + 1 }}</td>
-                            <td class="px-5 py-3 font-medium text-neutral-800">{{ $blog->title }}</td>
-                            <td class="px-5 py-3 text-neutral-500 text-xs">{{ $blog->focus_keyword ?? '—' }}{{ $blog->focus_location ? ' · ' . $blog->focus_location : '' }}</td>
-                            <td class="px-5 py-3">@include('admin.partials.status-badge', ['status' => $blog->status])</td>
-                            <td class="px-5 py-3">
+                            <td class="px-6 py-4 text-neutral-400 font-mono text-xs">{{ $blog->sort_order + 1 }}</td>
+                            <td class="px-6 py-4 font-medium text-neutral-800">{{ $blog->title }}</td>
+                            <td class="px-6 py-4 text-neutral-500 text-xs">{{ $blog->focus_keyword ?? '—' }}{{ $blog->focus_location ? ' · ' . $blog->focus_location : '' }}</td>
+                            <td class="px-6 py-4">@include('admin.partials.status-badge', ['status' => $blog->status])</td>
+                            <td class="px-6 py-4">
                                 <div style="display: flex; gap: 6px; justify-content: flex-end;">
                                     <a href="{{ route('admin.jobs.blogs.edit', [$job, $blog]) }}" class="btn btn-sm btn-muted">Edit</a>
                                     <form method="POST" action="{{ route('admin.jobs.blogs.destroy', [$job, $blog]) }}" onsubmit="return confirm('Delete this article?');">
@@ -111,11 +111,11 @@
     </div>
 
     @if($job->outgoingEmails->isNotEmpty())
-        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
+        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
             <h3 class="text-sm font-semibold text-neutral-900 mb-4">Activity</h3>
             <div class="space-y-1">
                 @foreach($job->outgoingEmails as $email)
-                    <div class="flex items-center gap-3 py-3 border-b border-neutral-100 last:border-0">
+                    <div class="flex items-center gap-3 py-4 border-b border-neutral-100 last:border-0">
                         <span class="flex-shrink-0 w-2 h-2 rounded-full {{ $email->status->value === 'sent' ? 'bg-green-500' : 'bg-red-400' }}"></span>
                         <span class="text-sm text-neutral-700">
                             {{ $email->type->label() }} email
