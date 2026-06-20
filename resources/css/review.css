@@ -178,6 +178,18 @@ html, body {
 }
 
 .blog-card-header:hover { background: var(--bg-alt); }
+.blog-card-expand-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 0 10px;
+    font-size: 11px;
+    color: var(--text2);
+    cursor: pointer;
+    user-select: none;
+}
+.blog-card-expand-hint:hover { color: var(--text); }
 .blog-card-title { font-weight: 600; font-size: 15px; }
 .blog-card-meta { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
 .meta-chip-row { display: flex; align-items: center; gap: 8px; }
@@ -245,6 +257,47 @@ html, body {
 .blog-content u { text-decoration: underline; }
 .blog-content a { color: var(--brand-dark); text-decoration: underline; }
 .blog-content blockquote { border-left: 3px solid var(--border); padding-left: 1em; color: var(--text2); margin: 1em 0; }
+
+.section-group-heading {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text2);
+    padding: 4px 0 10px;
+}
+.section-subheading {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+    margin: 20px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.section-subheading:first-child { margin-top: 16px; }
+.section-heading-value {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.copy-section-banner {
+    padding: 20px 0 8px;
+    text-align: center;
+}
+.copy-section-headline {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+.copy-section-subheadline {
+    font-size: 15px;
+    color: var(--text2);
+}
 
 .review-actions {
     display: flex;

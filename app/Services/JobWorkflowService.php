@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\BlogStatus;
+use App\Enums\CopySectionStatus;
 use App\Enums\JobStatus;
 use App\Enums\NotificationType;
 use App\Models\Job;
@@ -25,7 +26,11 @@ class JobWorkflowService
             throw new DomainException('Only draft jobs can be sent for review.');
         }
 
-        if ($job->blogs()->count() < 1) {
+        if ($job->isCopywriting()) {
+            if ($job->copySections()->count() < 1) {
+                throw new DomainException('Add at least one section before sending for review.');
+            }
+        } elseif ($job->blogs()->count() < 1) {
             throw new DomainException('Add at least one blog before sending for review.');
         }
 
@@ -56,12 +61,21 @@ class JobWorkflowService
             throw new DomainException('Only jobs in review can be prepared for re-review.');
         }
 
-        $job->blogs()
-            ->where('status', BlogStatus::Declined)
-            ->update([
-                'status' => BlogStatus::Pending,
-                'client_notes' => null,
-            ]);
+        if ($job->isCopywriting()) {
+            $job->copySections()
+                ->where('status', CopySectionStatus::Declined)
+                ->update([
+                    'status' => CopySectionStatus::Pending,
+                    'client_notes' => null,
+                ]);
+        } else {
+            $job->blogs()
+                ->where('status', BlogStatus::Declined)
+                ->update([
+                    'status' => BlogStatus::Pending,
+                    'client_notes' => null,
+                ]);
+        }
 
         $job->update(['review_submitted_at' => null]);
     }
@@ -90,8 +104,8 @@ class JobWorkflowService
             throw new DomainException('Only jobs in review can be finalised.');
         }
 
-        if (! $job->allBlogsApproved()) {
-            throw new DomainException('All articles must be approved before finalising.');
+        if (! $job->allContentApproved()) {
+            throw new DomainException('All content must be approved before finalising.');
         }
 
         $this->complete($job);

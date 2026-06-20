@@ -10,6 +10,14 @@
             @csrf
             @method('PUT')
             <div class="form-group">
+                <label class="form-label" for="job_type">Job Type *</label>
+                <select id="job_type" name="job_type" class="form-select" required>
+                    @foreach($jobTypes as $type)
+                        <option value="{{ $type->value }}" @selected(old('job_type', $job->job_type->value) === $type->value)>{{ $type->label() }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="form-label" for="client_id">Client *</label>
                 <select id="client_id" name="client_id" class="form-select" required>
                     @foreach($clients as $client)

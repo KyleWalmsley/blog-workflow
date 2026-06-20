@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Enums\BlogStatus;
+use App\Enums\CopySectionStatus;
 use App\Enums\JobStatus;
 use App\Enums\NotificationType;
 use App\Models\Blog;
+use App\Models\CopySection;
 use App\Models\Job;
 use DomainException;
 
@@ -38,19 +40,41 @@ class ReviewSubmissionService
         ]);
     }
 
+    public function updateSectionReview(CopySection $section, CopySectionStatus $status, ?string $notes): void
+    {
+        $job = $section->job;
+
+        if ($job->status === JobStatus::Completed) {
+            throw new DomainException('This job has already been completed.');
+        }
+
+        if ($job->status !== JobStatus::InReview) {
+            throw new DomainException('This job is not currently open for review.');
+        }
+
+        if ($status === CopySectionStatus::Declined && ! $job->canStartRevisionCycle()) {
+            throw new DomainException('The revision limit has been reached. Please contact your account manager.');
+        }
+
+        $section->update([
+            'status' => $status,
+            'client_notes' => $status === CopySectionStatus::Declined ? $notes : null,
+        ]);
+    }
+
     public function submitReview(Job $job): array
     {
         if ($job->status !== JobStatus::InReview) {
             throw new DomainException('This job is not currently open for review.');
         }
 
-        if (! $job->allBlogsReviewed()) {
-            throw new DomainException('Please review all articles before submitting.');
+        if (! $job->allContentReviewed()) {
+            throw new DomainException('Please review all content before submitting.');
         }
 
         $job->update(['review_submitted_at' => now()]);
 
-        if ($job->allBlogsApproved()) {
+        if ($job->allContentApproved()) {
             return [
                 'needs_finalization' => true,
                 'message' => 'All articles approved. Please confirm to finalise this job.',
@@ -89,8 +113,8 @@ class ReviewSubmissionService
 
     public function finalize(Job $job): void
     {
-        if (! $job->allBlogsApproved()) {
-            throw new DomainException('All articles must be approved before finalising.');
+        if (! $job->allContentApproved()) {
+            throw new DomainException('All content must be approved before finalising.');
         }
 
         $this->jobWorkflowService->finalize($job);

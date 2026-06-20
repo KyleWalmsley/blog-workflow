@@ -42,7 +42,7 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="border-b border-neutral-100 bg-neutral-50">
-                            <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Type</th>
+                            <th class="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide" style="text-align: center; width: 140px;">Type</th>
                             <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Message</th>
                             <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Job</th>
                             <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">When</th>
@@ -52,7 +52,22 @@
                     <tbody class="divide-y divide-neutral-100">
                         @foreach($notifications as $notification)
                             <tr class="transition-colors {{ $notification->read_at ? 'hover:bg-neutral-50' : 'bg-blue-50 hover:bg-blue-50/80' }}">
-                                <td class="px-6 py-4">@include('admin.partials.status-badge', ['status' => $notification->type])</td>
+                                <td class="px-6 py-4" style="text-align: center;">
+                                    @php
+                                        $nVal = $notification->type instanceof \BackedEnum ? $notification->type->value : $notification->type;
+                                        $nLabel = $notification->type instanceof \BackedEnum ? $notification->type->label() : ucfirst(str_replace('_', ' ', $nVal));
+                                        $nClass = match($nVal) {
+                                            'active', 'approved', 'completed', 'job_completed' => 'bg-green-50 text-green-700',
+                                            'declined', 'inactive', 'revision_limit_reached'   => 'bg-red-50 text-red-600',
+                                            'in_review', 'review_submitted'                    => 'bg-blue-50 text-blue-600',
+                                            'pending', 'draft'                                 => 'bg-amber-50 text-amber-600',
+                                            default => 'bg-neutral-100 text-neutral-600',
+                                        };
+                                    @endphp
+                                    <span class="inline-flex text-[10px] font-semibold rounded {{ $nClass }}" style="width: 120px; justify-content: center; padding: 3px 6px;">
+                                        {{ $nLabel }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 text-neutral-700">{{ $notification->message }}</td>
                                 <td class="px-6 py-4 text-neutral-600">
                                     @if($notification->job)
@@ -62,15 +77,15 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-neutral-500">{{ $notification->created_at->diffForHumans() }}</td>
-                                <td class="px-6 py-4 text-right">
+                                <td class="px-6 py-4" style="text-align: right; width: 120px;">
                                     @if(!$notification->read_at)
-                                        <form method="POST" action="{{ route('admin.notifications.read', $notification) }}">
+                                        <form method="POST" action="{{ route('admin.notifications.read', $notification) }}" style="display: inline;">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-sm btn-muted">Mark Read</button>
+                                            <button type="submit" class="btn btn-sm btn-muted" style="width: 90px; white-space: nowrap;">Mark Read</button>
                                         </form>
                                     @else
-                                        <span class="text-xs text-neutral-400">Read</span>
+                                        <button class="btn btn-sm btn-muted" disabled style="width: 90px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; opacity: 0.4; cursor: default;">Read</button>
                                     @endif
                                 </td>
                             </tr>

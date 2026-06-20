@@ -11,7 +11,7 @@ class ReviewController extends Controller
     public function show(string $token): View
     {
         $job = Job::where('review_token', $token)
-            ->with(['client', 'blogs'])
+            ->with(['client', 'blogs', 'copySections'])
             ->firstOrFail();
 
         if ($job->status === \App\Enums\JobStatus::Completed) {
@@ -28,8 +28,13 @@ class ReviewController extends Controller
             ]);
         }
 
-        $reviewedCount = $job->blogs->filter(fn ($b) => $b->status->value !== 'pending')->count();
-        $totalCount = $job->blogs->count();
+        if ($job->isCopywriting()) {
+            $reviewedCount = $job->copySections->filter(fn ($s) => $s->status->value !== 'pending')->count();
+            $totalCount = $job->copySections->count();
+        } else {
+            $reviewedCount = $job->blogs->filter(fn ($b) => $b->status->value !== 'pending')->count();
+            $totalCount = $job->blogs->count();
+        }
 
         return view('review.show', [
             'job' => $job,

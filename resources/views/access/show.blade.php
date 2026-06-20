@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="access-logo">
-        <img src="/images/disence-full.png" alt="Disence">
+        <img src="/images/navigo-full.png" alt="Navigo">
     </div>
     <p class="access-sub">Enter your access code to continue</p>
 

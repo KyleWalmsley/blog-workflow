@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\BlogStatus;
+use App\Enums\CopySectionStatus;
+use App\Enums\JobType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreJobRequest;
 use App\Http\Requests\Admin\UpdateJobRequest;
@@ -37,6 +39,7 @@ class JobController extends Controller
 
         return view('admin.jobs.create', [
             'clients' => $clients,
+            'jobTypes' => JobType::cases(),
             'unreadNotifications' => $this->notificationService->unreadCount(),
         ]);
     }
@@ -52,7 +55,7 @@ class JobController extends Controller
 
     public function show(Job $job): View
     {
-        $job->load(['client', 'blogs', 'outgoingEmails']);
+        $job->load(['client', 'blogs', 'copySections', 'outgoingEmails']);
 
         $blogCounts = [
             'pending' => $job->blogs->where('status', BlogStatus::Pending)->count(),
@@ -60,9 +63,16 @@ class JobController extends Controller
             'declined' => $job->blogs->where('status', BlogStatus::Declined)->count(),
         ];
 
+        $sectionCounts = [
+            'pending' => $job->copySections->where('status', CopySectionStatus::Pending)->count(),
+            'approved' => $job->copySections->where('status', CopySectionStatus::Approved)->count(),
+            'declined' => $job->copySections->where('status', CopySectionStatus::Declined)->count(),
+        ];
+
         return view('admin.jobs.show', [
             'job' => $job,
             'blogCounts' => $blogCounts,
+            'sectionCounts' => $sectionCounts,
             'unreadNotifications' => $this->notificationService->unreadCount(),
         ]);
     }
@@ -74,6 +84,7 @@ class JobController extends Controller
         return view('admin.jobs.edit', [
             'job' => $job,
             'clients' => $clients,
+            'jobTypes' => JobType::cases(),
             'unreadNotifications' => $this->notificationService->unreadCount(),
         ]);
     }
@@ -127,7 +138,11 @@ class JobController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return back()->with('success', 'Declined articles reset to pending for re-review.');
+        $message = $job->isCopywriting()
+            ? 'Declined sections reset to pending for re-review.'
+            : 'Declined articles reset to pending for re-review.';
+
+        return back()->with('success', $message);
     }
 
     public function complete(Job $job): RedirectResponse

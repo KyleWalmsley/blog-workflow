@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\BlogStatus;
+use App\Enums\CopySectionStatus;
 use App\Enums\JobStatus;
+use App\Enums\JobType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,6 +15,7 @@ class Job extends Model
 {
     protected $fillable = [
         'client_id',
+        'job_type',
         'title',
         'status',
         'revision_count',
@@ -24,6 +27,7 @@ class Job extends Model
     protected function casts(): array
     {
         return [
+            'job_type' => JobType::class,
             'status' => JobStatus::class,
             'revision_count' => 'integer',
             'review_submitted_at' => 'datetime',
@@ -40,6 +44,10 @@ class Job extends Model
 
             if (empty($job->status)) {
                 $job->status = JobStatus::Draft;
+            }
+
+            if (empty($job->job_type)) {
+                $job->job_type = JobType::BlogCreation;
             }
         });
     }
@@ -59,9 +67,19 @@ class Job extends Model
         return $this->hasMany(AdminNotification::class);
     }
 
+    public function copySections(): HasMany
+    {
+        return $this->hasMany(CopySection::class)->orderBy('sort_order');
+    }
+
     public function outgoingEmails(): HasMany
     {
         return $this->hasMany(OutgoingEmail::class)->latest();
+    }
+
+    public function isCopywriting(): bool
+    {
+        return $this->job_type === JobType::WebsiteCopywriting;
     }
 
     public function reviewUrl(): string
@@ -88,6 +106,30 @@ class Job extends Model
     public function hasDeclinedBlogs(): bool
     {
         return $this->blogs()->where('status', BlogStatus::Declined)->exists();
+    }
+
+    public function allContentReviewed(): bool
+    {
+        if ($this->isCopywriting()) {
+            return ! $this->copySections()->where('status', CopySectionStatus::Pending)->exists();
+        }
+
+        return $this->allBlogsReviewed();
+    }
+
+    public function allContentApproved(): bool
+    {
+        if ($this->isCopywriting()) {
+            $total = $this->copySections()->count();
+
+            if ($total === 0) {
+                return false;
+            }
+
+            return $this->copySections()->where('status', CopySectionStatus::Approved)->count() === $total;
+        }
+
+        return $this->allBlogsApproved();
     }
 
     public function canStartRevisionCycle(): bool

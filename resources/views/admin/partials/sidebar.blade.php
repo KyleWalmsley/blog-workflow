@@ -2,8 +2,8 @@
     <div class="sidebar-top">
         <div class="logo-area">
             <div class="logo-swap">
-                <img src="/images/disence-icon.png" class="logo-icon-img" alt="Disence">
-                <img src="/images/disence-sidebar.png" class="logo-full-img" alt="Disence">
+                <img src="/images/navigo-icon.png" class="logo-icon-img" alt="Navigo">
+                <img src="/images/navigo-full.png" class="logo-full-img" alt="Navigo">
             </div>
         </div>
 

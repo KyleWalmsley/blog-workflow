@@ -60,6 +60,59 @@
         </div>
     </div>
 
+    @if($job->isCopywriting())
+    {{-- Website Copywriting sections --}}
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-6 border-b border-neutral-100 flex items-center justify-between">
+            <div>
+                <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Copy Sections</h3>
+                <p class="text-sm text-neutral-400 mt-1.5">
+                    {{ $sectionCounts['pending'] }} pending ·
+                    {{ $sectionCounts['approved'] }} approved ·
+                    {{ $sectionCounts['declined'] }} declined
+                </p>
+            </div>
+            <a href="{{ route('admin.jobs.copy-sections.create', $job) }}" class="btn btn-brand">Add Section</a>
+        </div>
+
+        @if($job->copySections->isEmpty())
+            <div class="empty-state"><p>No sections yet. Add copy sections before sending for review.</p></div>
+        @else
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-neutral-100 bg-neutral-50">
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Type</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Title / Headline</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wide">Status</th>
+                        <th class="px-6 py-4"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-neutral-100">
+                    @foreach($job->copySections->sortBy(fn($s) => $s->section_type->sortOrder()) as $section)
+                        <tr class="hover:bg-neutral-50 transition-colors">
+                            <td class="px-6 py-4 text-neutral-500 text-xs">{{ $section->section_type->label() }}</td>
+                            <td class="px-6 py-4 font-medium text-neutral-800">
+                                {{ $section->title ?? $section->headline ?? '—' }}
+                            </td>
+                            <td class="px-6 py-4">@include('admin.partials.status-badge', ['status' => $section->status])</td>
+                            <td class="px-6 py-4">
+                                <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                                    <a href="{{ route('admin.jobs.copy-sections.edit', [$job, $section]) }}" class="btn btn-sm btn-muted">Edit</a>
+                                    <form method="POST" action="{{ route('admin.jobs.copy-sections.destroy', [$job, $section]) }}" class="delete-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="openDeleteModal(this.closest('form'))">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
+    @else
+    {{-- Blog Creation articles --}}
     <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
         <div class="px-6 py-6 border-b border-neutral-100 flex items-center justify-between">
             <div>
@@ -96,10 +149,10 @@
                             <td class="px-6 py-4">
                                 <div style="display: flex; gap: 6px; justify-content: flex-end;">
                                     <a href="{{ route('admin.jobs.blogs.edit', [$job, $blog]) }}" class="btn btn-sm btn-muted">Edit</a>
-                                    <form method="POST" action="{{ route('admin.jobs.blogs.destroy', [$job, $blog]) }}" onsubmit="return confirm('Delete this article?');">
+                                    <form method="POST" action="{{ route('admin.jobs.blogs.destroy', [$job, $blog]) }}" class="delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="openDeleteModal(this.closest('form'))">Delete</button>
                                     </form>
                                 </div>
                             </td>
@@ -109,6 +162,7 @@
             </table>
         @endif
     </div>
+    @endif
 
     @if($job->outgoingEmails->isNotEmpty())
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-7">
@@ -133,4 +187,37 @@
             </div>
         </div>
     @endif
+
+    {{-- Delete confirmation modal --}}
+    <div id="delete-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:200; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:white; border-radius:14px; padding:32px; max-width:400px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+            <h3 style="font-family:'DM Serif Display',serif; font-size:1.35rem; color:#1a1a2e; margin-bottom:10px;">Are you sure you wish to proceed?</h3>
+            <p style="color:#666; font-size:14px; margin-bottom:28px;">This action cannot be undone.</p>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button type="button" onclick="closeDeleteModal()" class="btn btn-muted">Cancel</button>
+                <button type="button" id="delete-confirm-btn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        let pendingDeleteForm = null;
+        function openDeleteModal(form) {
+            pendingDeleteForm = form;
+            const modal = document.getElementById('delete-modal');
+            modal.style.display = 'flex';
+        }
+        function closeDeleteModal() {
+            pendingDeleteForm = null;
+            document.getElementById('delete-modal').style.display = 'none';
+        }
+        document.getElementById('delete-confirm-btn').addEventListener('click', function () {
+            if (pendingDeleteForm) pendingDeleteForm.submit();
+        });
+        document.getElementById('delete-modal').addEventListener('click', function (e) {
+            if (e.target === this) closeDeleteModal();
+        });
+    </script>
+    @endpush
 @endsection

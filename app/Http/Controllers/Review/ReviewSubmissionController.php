@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Review;
 
 use App\Enums\BlogStatus;
+use App\Enums\CopySectionStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Review\UpdateBlogReviewRequest;
+use App\Http\Requests\Review\UpdateSectionReviewRequest;
 use App\Models\Blog;
+use App\Models\CopySection;
 use App\Models\Job;
 use App\Services\ReviewSubmissionService;
 use DomainException;
@@ -51,6 +54,41 @@ class ReviewSubmissionController extends Controller
             'reviewed_count' => $reviewedCount,
             'total_count' => $job->blogs->count(),
             'all_reviewed' => $job->allBlogsReviewed(),
+        ]);
+    }
+
+    public function updateSection(UpdateSectionReviewRequest $request, string $token, CopySection $copySection): JsonResponse
+    {
+        $job = $this->findJob($token);
+
+        abort_unless($copySection->job_id === $job->id, 404);
+
+        try {
+            $status = CopySectionStatus::from($request->validated('status'));
+            $this->reviewSubmissionService->updateSectionReview(
+                $copySection,
+                $status,
+                $request->validated('client_notes')
+            );
+        } catch (DomainException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        $copySection->refresh();
+        $job->refresh()->load('copySections');
+
+        $reviewedCount = $job->copySections->filter(fn ($s) => $s->status->value !== 'pending')->count();
+
+        return response()->json([
+            'message' => 'Review saved.',
+            'section' => [
+                'id' => $copySection->id,
+                'status' => $copySection->status->value,
+                'client_notes' => $copySection->client_notes,
+            ],
+            'reviewed_count' => $reviewedCount,
+            'total_count' => $job->copySections->count(),
+            'all_reviewed' => $job->allContentReviewed(),
         ]);
     }
 

@@ -9,6 +9,14 @@
         <form method="POST" action="{{ route('admin.jobs.store') }}">
             @csrf
             <div class="form-group">
+                <label class="form-label" for="job_type">Job Type *</label>
+                <select id="job_type" name="job_type" class="form-select" required>
+                    @foreach($jobTypes as $type)
+                        <option value="{{ $type->value }}" @selected(old('job_type', \App\Enums\JobType::BlogCreation->value) === $type->value)>{{ $type->label() }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label class="form-label" for="client_id">Client *</label>
                 <select id="client_id" name="client_id" class="form-select" required>
                     <option value="">Select client...</option>

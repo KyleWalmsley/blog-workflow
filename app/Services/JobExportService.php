@@ -27,17 +27,37 @@ class JobExportService
 
         $pdfPaths = [];
 
-        foreach ($job->blogs as $blog) {
-            $pdf = Pdf::loadView('exports.blog-pdf', [
-                'blog' => $blog,
-                'job' => $job,
-                'client' => $job->client,
-            ]);
+        if ($job->isCopywriting()) {
+            foreach ($job->copySections as $section) {
+                $pdf = Pdf::loadView('exports.copy-section-pdf', [
+                    'section' => $section,
+                    'job' => $job,
+                    'client' => $job->client,
+                ]);
 
-            $filename = Str::slug($blog->title).'.pdf';
-            $path = $tempDir.'/'.$filename;
-            $pdf->save($path);
-            $pdfPaths[] = $path;
+                $label = $section->section_type->label();
+                if ($section->title) {
+                    $label .= ' - '.$section->title;
+                }
+
+                $filename = Str::slug($label).'.pdf';
+                $path = $tempDir.'/'.$filename;
+                $pdf->save($path);
+                $pdfPaths[] = $path;
+            }
+        } else {
+            foreach ($job->blogs as $blog) {
+                $pdf = Pdf::loadView('exports.blog-pdf', [
+                    'blog' => $blog,
+                    'job' => $job,
+                    'client' => $job->client,
+                ]);
+
+                $filename = Str::slug($blog->title).'.pdf';
+                $path = $tempDir.'/'.$filename;
+                $pdf->save($path);
+                $pdfPaths[] = $path;
+            }
         }
 
         $slug = Str::slug($job->title);

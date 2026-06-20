@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccessController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\CopySectionController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -19,6 +20,7 @@ Route::post('/access', [AccessController::class, 'store'])->name('access.store')
 
 Route::get('/review/{token}', [ReviewController::class, 'show'])->name('review.show');
 Route::patch('/review/{token}/blogs/{blog}', [ReviewSubmissionController::class, 'update'])->name('review.blog.update');
+Route::patch('/review/{token}/sections/{copySection}', [ReviewSubmissionController::class, 'updateSection'])->name('review.section.update');
 Route::post('/review/{token}/submit', [ReviewSubmissionController::class, 'submit'])->name('review.submit');
 Route::post('/review/{token}/finalize', [ReviewSubmissionController::class, 'finalize'])->name('review.finalize');
 
@@ -28,6 +30,12 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('clients', ClientController::class);
     Route::resource('jobs', JobController::class);
     Route::resource('jobs.blogs', BlogController::class)->except(['index']);
+
+    Route::get('jobs/{job}/copy-sections/create', [CopySectionController::class, 'create'])->name('jobs.copy-sections.create');
+    Route::post('jobs/{job}/copy-sections', [CopySectionController::class, 'store'])->name('jobs.copy-sections.store');
+    Route::get('jobs/{job}/copy-sections/{copySection}/edit', [CopySectionController::class, 'edit'])->name('jobs.copy-sections.edit');
+    Route::put('jobs/{job}/copy-sections/{copySection}', [CopySectionController::class, 'update'])->name('jobs.copy-sections.update');
+    Route::delete('jobs/{job}/copy-sections/{copySection}', [CopySectionController::class, 'destroy'])->name('jobs.copy-sections.destroy');
 
     Route::post('jobs/{job}/send-for-review', [JobController::class, 'sendForReview'])->name('jobs.send-for-review');
     Route::post('jobs/{job}/prepare-re-review', [JobController::class, 'prepareReReview'])->name('jobs.prepare-re-review');
