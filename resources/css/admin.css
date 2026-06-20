@@ -263,21 +263,16 @@ html, body {
 .right-sidebar {
     width: 272px;
     flex-shrink: 0;
-    background: #ffffff;
+    background: linear-gradient(180deg, #dbeafe 0%, #eff6ff 18%, #f8fbff 32%, #ffffff 52%);
     border-left: 1px solid var(--border);
     position: fixed;
-    top: 0;
+    top: 80px;
     right: 0;
-    height: 100vh;
+    height: calc(100vh - 80px);
     z-index: 40;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-}
-.right-sidebar-top {
-    background: linear-gradient(160deg, #dbeafe 0%, #eff6ff 55%, #ffffff 100%);
-    min-height: 200px;
-    flex-shrink: 0;
 }
 
 /* ── Badges ─────────────────────────────────────────────────── */
