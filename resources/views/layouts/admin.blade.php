@@ -20,6 +20,7 @@
                 @yield('content')
             </main>
         </div>
+        @include('admin.partials.right-sidebar')
     </div>
     @stack('scripts')
 </body>

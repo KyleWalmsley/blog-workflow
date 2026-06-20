@@ -4,7 +4,7 @@
 @section('page-title', 'New Job')
 
 @section('content')
-    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6" style="max-width: 560px;">
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
         <h2 class="text-sm font-semibold text-neutral-900 mb-5">Create Job</h2>
         <form method="POST" action="{{ route('admin.jobs.store') }}">
             @csrf

@@ -13,7 +13,7 @@
 @endpush
 
 @section('content')
-    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6" style="max-width: 800px;">
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
         <h2 class="text-sm font-semibold text-neutral-900 mb-5">Add Article to {{ $job->title }}</h2>
         <form method="POST" action="{{ route('admin.jobs.blogs.store', $job) }}">
             @csrf

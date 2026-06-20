@@ -4,7 +4,7 @@
 @section('page-title', 'New Client')
 
 @section('content')
-    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6" style="max-width: 720px;">
+    <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6">
         <h2 class="text-sm font-semibold text-neutral-900 mb-0.5">Create Client</h2>
         <p class="text-xs text-neutral-400 mb-5">Add a new client profile</p>
 
