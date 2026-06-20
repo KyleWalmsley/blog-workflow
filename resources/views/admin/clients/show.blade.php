@@ -53,7 +53,7 @@
 
     <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
         <div class="px-6 py-6 border-b border-neutral-100 flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-neutral-900">Recent Jobs</h3>
+            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Recent Jobs</h3>
         </div>
         @if($client->jobs->isEmpty())
             <div class="empty-state"><p>No jobs for this client yet.</p></div>

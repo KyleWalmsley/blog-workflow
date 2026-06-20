@@ -63,8 +63,8 @@
     <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
         <div class="px-6 py-6 border-b border-neutral-100 flex items-center justify-between">
             <div>
-                <h3 class="text-sm font-semibold text-neutral-900">Blog Articles</h3>
-                <p class="text-xs text-neutral-400 mt-1">
+                <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Blog Articles</h3>
+                <p class="text-sm text-neutral-400 mt-1.5">
                     {{ $blogCounts['pending'] }} pending ·
                     {{ $blogCounts['approved'] }} approved ·
                     {{ $blogCounts['declined'] }} declined
